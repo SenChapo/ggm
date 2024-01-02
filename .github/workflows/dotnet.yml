@@ -1,0 +1,23 @@
+name: 'Verify GGSQL Project'
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@main
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: Install dependencies
+      run: nuget restore GGM.sln
+    - name: Build GGSQL
+      run: dotnet build GGSQL/GGSQL.csproj --configuration Release -p:PostBuildEvent= --no-restore
